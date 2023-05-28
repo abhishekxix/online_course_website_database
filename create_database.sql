@@ -1,0 +1,47 @@
+CREATE DATABASE IF NOT EXISTS course_website_db;
+USE course_website_db;
+
+CREATE TABLE IF NOT EXISTS students (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  date_registered DATETIME NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS instructors (
+  id SMALLINT PRIMARY KEY AUTO_INCREMENT,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS courses (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(255) NOT NULL,
+  price DECIMAL(5,2) NOT NULL,
+  instructor_id SMALLINT,
+  FOREIGN KEY (instructor_id) REFERENCES instructors(id) ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS tags (
+  id SMALLINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS course_tags (
+  tag_id SMALLINT,
+  course_id INT,
+  FOREIGN KEY (tag_id) REFERENCES tags(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (course_id) REFERENCES courses(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  PRIMARY KEY (tag_id, course_id)
+);
+
+CREATE TABLE IF NOT EXISTS enrollments (
+  student_id INT,
+  course_id INT,
+  date DATETIME NOT NULL,
+  price DECIMAL(5,2) NOT NULL,
+  PRIMARY KEY (student_id, course_id),
+  FOREIGN KEY (student_id) REFERENCES students(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+  FOREIGN KEY (course_id) REFERENCES courses(id) ON UPDATE CASCADE ON DELETE RESTRICT
+);
